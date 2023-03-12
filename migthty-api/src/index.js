@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const { Pool } = require('pg');
+const cron = require('node-cron');
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
@@ -139,6 +140,49 @@ app.put('/api/posts/:postId', async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+  function shuffleArray(array){
+    var j, x, i;
+    for (i = array.length - 1; i > 0; i--){
+      j = Math.floor(Math.random() * (i + 1));
+      x = array[i];
+      array[i] = array[j];
+      array[j] = x;
+    }
+    return array;
+  }
+
+  cron.schedule('0 0 * * *', async() => {
+    //Get all users from the database
+    const users = await pool.query('SELECT * FROM users');
+    
+    // Calculate the number of users that should have access to all posts// Calculate the number of users that should have access to all posts
+    const numUsersWithAccess = Math.ceil(users.rows.length * 0.1);
+
+    // Shuffle the array of users
+    const shuffledUsers = shuffleArray(users.rows);
+
+    // Update the access_level field of the selected users
+    for(let i = 0; i < numUsersWithAccess; i++){
+      const userId = shuffledUsers[i].user_id;
+      await pool.query('UPDATE users SET access_level = $1 WHERE user_id = $2', [2, userId]);
+    }
+
+    // Set the access_level field to 1 for all other users
+    await pool.query('UPDATE users SET access_level = $1 WHERE access_level <> $2', [1,2]);
+
+    console.log('Selected users with access to all posts:', shuffledUsers.slice(0, numUsersWithAccess).map(user => user.name));
+
+
+
+
+  });
+
+  cron.schedule('*/1 * * * *', async () => {
+    console.log('Cron job running every minute!');
+    // Your code to select 10% of users and update their access level goes here
+  });
+  
 
 // Start the server
 app.listen(3000, () => {
