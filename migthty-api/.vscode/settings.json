@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/9f0ed811-fc35-43da-aba8-7d9a4a6309f9/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/mighty-app-api",
+    "appService.deploySubpath": "."
+}
