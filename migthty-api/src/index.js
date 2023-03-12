@@ -4,9 +4,9 @@ const { Pool } = require('pg');
 const cron = require('node-cron');
 const pool = new Pool({
   user: 'postgres',
-  host: 'localhost',
-  database: 'mighty_db',
-  password: 'postgres',
+  host: 'pg-cluster.postgres.database.azure.com',
+  database: 'mightyDB',
+  password: 'Alleszuseinerzeit999!',
   port: '5432'
 });
 
@@ -184,7 +184,7 @@ app.put('/api/posts/:postId', async (req, res) => {
   });
   
 
-// Start the server
-app.listen(3000, () => {
-  console.log('Server started on port 3000');
-});
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
+  });
