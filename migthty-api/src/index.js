@@ -4,9 +4,9 @@ const { Pool } = require('pg');
 const cron = require('node-cron');
 const pool = new Pool({
   user: 'postgres',
-  host: 'pg-cluster.postgres.database.azure.com',
-  database: 'mightyDB',
-  password: 'Alleszuseinerzeit999!',
+  host: 'localhost',
+  database: 'mighty_db',
+  password: 'postgres!',
   port: '5432'
 });
 
@@ -178,10 +178,6 @@ app.put('/api/posts/:postId', async (req, res) => {
 
   });
 
-  cron.schedule('*/1 * * * *', async () => {
-    console.log('Cron job running every minute!');
-    // Your code to select 10% of users and update their access level goes here
-  });
   
 
   const port = process.env.PORT || 3000;
