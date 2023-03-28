@@ -6,7 +6,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'mighty_db',
-  password: 'postgres!',
+  password: 'postgres',
   port: '5432'
 });
 
